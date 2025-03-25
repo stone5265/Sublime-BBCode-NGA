@@ -14,7 +14,7 @@
 
 ## 安装
 
-**不使用Git：** 从 [GitHub](https://github.com/stone5265/SublimeBBS_NGA) 下载最新的源码，将整个文件夹复制到 Packages 目录下。
+**不使用Git：** 从 [GitHub](https://github.com/stone5265/SublimeBBS_NGA) 下载最新的源码，将整个文件夹（若是打包下载，则将解压出来的文件夹重命名为`SublimeBBS_NGA`，不要保留如`-master/-v0.X`的后缀，以支持覆盖更新）复制到 Packages 目录下。
 
 **使用Git：** 在 Packages 目录下克隆仓库：
 
