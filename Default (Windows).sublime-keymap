@@ -1,0 +1,35 @@
+[
+    {
+        "keys": ["ctrl+b"],
+        "command": "toggle_bold",
+        "context": [
+            {
+                "key": "selector",
+                "operator": "equal",
+                "operand": "source.bbs_nga"
+            }
+        ]
+    },
+    {
+        "keys": ["ctrl+u"],
+        "command": "toggle_underline",
+        "context": [
+            {
+                "key": "selector",
+                "operator": "equal",
+                "operand": "source.bbs_nga"
+            }
+        ]
+    },
+    {
+        "keys": ["ctrl+i"],
+        "command": "toggle_italic",
+        "context": [
+            {
+                "key": "selector",
+                "operator": "equal",
+                "operand": "source.bbs_nga"
+            }
+        ]
+    }
+]

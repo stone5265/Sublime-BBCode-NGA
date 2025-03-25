@@ -1,0 +1,4 @@
+[
+    {"caption": "BBS代码转换为纯文本", "command": "decode"},
+    {"caption": "将两个用空格隔开的数字(行数>0 0<列数<=20)转换为表格", "command": "create_table"},
+]

@@ -12,6 +12,10 @@
 
 - **专楼模板**
 
+- **快捷键**：`ctrl+b`加粗，`ctrl+i`斜体，`ctrl+u`下划线
+
+- **右键菜单**：包括**BBS代码转换为纯文本**和**快捷创建表格**功能
+
 ## 安装
 
 **不使用Git：** 从 [GitHub](https://github.com/stone5265/SublimeBBS_NGA) 下载最新的源码，将整个文件夹（若是打包下载，则将解压出来的文件夹重命名为`SublimeBBS_NGA`，不要保留如`-master/-v0.X`的后缀，以支持覆盖更新）复制到 Packages 目录下。
