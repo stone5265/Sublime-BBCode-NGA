@@ -1,0 +1,19 @@
+<snippet>
+	<content><![CDATA[
+[table]
+[tr]
+[td33][align=center][quote]__PV封面图__[/quote]
+[url=__视频B站地址__]PV1[/url]
+20xx年/x月/x日[/align][/td]
+[td33][align=center][quote]__PV封面图__[/quote]
+[url=__视频B站地址__]PV2[/url]
+20xx年/x月/x日[/align][/td]
+[td34][align=center][quote]__PV封面图__[/quote]
+[url=__视频B站地址__]PV3[/url]
+20xx年/x月/x日[/align][/td]
+[/tr]
+[/table]
+]]></content>
+	<tabTrigger>template_video</tabTrigger>
+	<scope>source.bbs_nga</scope>
+</snippet>

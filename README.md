@@ -6,7 +6,7 @@
 
 ## 特性
 
-- **语法高亮**
+- **语法高亮**：包含**包裹光标的代码作用域高亮**、**未闭合代码块提示**
 
 - **代码补全**
 
@@ -14,7 +14,7 @@
 
 ## 安装
 
-**不使用Git：**从 [GitHub](https://github.com/stone5265/SublimeBBS_NGA) 下载最新的源码，将整个文件夹复制到 Packages 目录下。
+**不使用Git：** 从 [GitHub](https://github.com/stone5265/SublimeBBS_NGA) 下载最新的源码，将整个文件夹复制到 Packages 目录下。
 
 **使用Git：** 在 Packages 目录下克隆仓库：
 

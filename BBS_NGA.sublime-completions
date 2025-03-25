@@ -1,3 +1,4 @@
+// v0.2 New: ccode
 {
 	"scope": "source.bbs_nga",
 
@@ -47,6 +48,11 @@
 			"trigger": "qquote",
 			"contents": "[quote]${1:__内容__}[/quote]",
 			"annotation": "引用"
+		},
+		{
+			"trigger": "ccode",
+			"contents": "[code]${1:__内容__}[/code]",
+			"annotation": "代码块"
 		},
 		{
 			"trigger": "ccollapse",
@@ -167,28 +173,6 @@
 			"trigger": "collapse_img2",
 			"contents": "[collapse=${1:描述}]__图__\n[/collapse]$2",
 			"annotation": "折叠的图片(带描述)"
-		},
-
-		// TEMPLATE
-		{
-			"trigger": "template_character",
-			"contents": "[table]\n[tr]\n[td20][align=center][quote]__角色头像图__[/quote]\n__角色名__\n[color=silver]__CV名__[/color][/align][/td]\n[td20][align=center][quote]__角色头像图__[/quote]\n__角色名__\n[color=silver]__CV名__[/color][/align][/td]\n[td20][align=center][quote]__角色头像图__[/quote]\n__角色名__\n[color=silver]__CV名__[/color][/align][/td]\n[td20][align=center][quote]__角色头像图__[/quote]\n__角色名__\n[color=silver]__CV名__[/color][/align][/td]\n[td20][align=center][quote]__角色头像图__[/quote]\n__角色名__\n[color=silver]__CV名__[/color][/align][/td]\n[/tr]\n[/table]\n[collapse=__角色名__]\n[table]\n[tr]\n[td30][quote][align=center]__角色立绘图__[/align][/quote][/td]\n[td70]\n[size=150%][b]__角色名__[/b][/size][h][/h]\nCV：__CV名__\n[align=right].[/align]__文本__\n[/td]\n[/tr]\n[/table]\n[/collapse][collapse=__角色名__]\n[table]\n[tr]\n[td30][quote][align=center]__角色立绘图__[/align][/quote][/td]\n[td70]\n[size=150%][b]__角色名__[/b][/size][h][/h]\nCV：__CV名__\n[align=right].[/align]__文本__\n[/td]\n[/tr]\n[/table]\n[/collapse][collapse=__角色名__]\n[table]\n[tr]\n[td30][quote][align=center]__角色立绘图__[/align][/quote][/td]\n[td70]\n[size=150%][b]__角色名__[/b][/size][h][/h]\nCV：__CV名__\n[align=right].[/align]__文本__\n[/td]\n[/tr]\n[/table]\n[/collapse][collapse=__角色名__]\n[table]\n[tr]\n[td30][quote][align=center]__角色立绘图__[/align][/quote][/td]\n[td70]\n[size=150%][b]__角色名__[/b][/size][h][/h]\nCV：__CV名__\n[align=right].[/align]__文本__\n[/td]\n[/tr]\n[/table]\n[/collapse][collapse=__角色名__]\n[table]\n[tr]\n[td30][quote][align=center]__角色立绘图__[/align][/quote][/td]\n[td70]\n[size=150%][b]__角色名__[/b][/size][h][/h]\nCV：__CV名__\n[align=right].[/align]__文本__\n[/td]\n[/tr]\n[/table]\n[/collapse]",
-			"annotation": "角色模块"
-		},
-		{
-			"trigger": "template_video",
-			"contents": "[table]\n[tr]\n[td33][align=center][quote]__PV封面图__[/quote]\n[url=__视频B站地址__]PV1[/url]\n20xx年/x月/x日[/align][/td]\n[td33][align=center][quote]__PV封面图__[/quote]\n[url=__视频B站地址__]PV2[/url]\n20xx年/x月/x日[/align][/td]\n[td34][align=center][quote]__PV封面图__[/quote]\n[url=__视频B站地址__]PV3[/url]\n20xx年/x月/x日[/align][/td]\n[/tr]\n[/table]",
-			"annotation": "视频模块"
-		},
-		{
-			"trigger": "template_episode_preview",
-			"contents": "[b][size=120%]#__episode__ __标题__[/size][/b]\n__简介__\n[collapse=先行图(x张)]\n__图__\n__图__\n[/collapse]\n[collapse=原文]\n[color=silver][b][size=120%]#__episode__ __标题原文__[/size][/b]\n__简介原文__\n[/color][/collapse]",
-			"annotation": "先行情报模块"
-		},
-		{
-			"trigger": "template_overall",
-			"contents": "[quote][align=center]__banner图__[/align][/quote]\n[quote][align=center]__最新视觉图__\n[collapse=其他视觉图(2张)]__其他视觉图2__\n__其他视觉图1__[/collapse][/align][/quote]\n[h]&#9724; INTRODUCTION[/h]\n[quote]\n__文本__\n[/quote]\n[h]&#9724; STORY[/h]\n[quote]\n__文本__\n[/quote]\n[h]&#9724; CHARACTER[/h]\n[quote]\n__角色模块__\n[/quote]\n[h]&#9724; PV[/h]\n[quote]\n__视频模块__\n[/quote]\n[h]&#9724; STAFF[/h]\n[quote]\n__STAFF表格__\n官网：__官网域名__\n[/quote]\n[h]&#9724; MUSIC[/h]\n[quote]\n[table]\n[tr][td50][align=center][b]OP[/b][/align][/td][td50][align=center][b]ED[/b][/align][/td][/tr]\n[tr]\n[td50][align=center][quote]__OP动画版封面图__[/quote]\n《__OP名__》\n__歌手__\n作詞：__作者名__\n作曲：__作者名__\n編曲：__作者名__[/align][/td]\n[td50][align=center][quote]__ED动画版封面图__[/quote]\n《__ED名__》\n__歌手__\n作詞：__作者名__\n作曲：__作者名__\n編曲：__作者名__[/align][/td]\n[/tr]\n[/table]\n[/quote]",
-			"annotation": "主楼"
 		},
 	]
 }
