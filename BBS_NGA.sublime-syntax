@@ -1,0 +1,371 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/syntax.html
+# v0.1
+name: BBS-NGA
+file_extensions:
+  - nga
+  - bbsnga
+scope: source.bbs_nga
+
+variables:
+  algin_code: |-
+    (?xi: left | center | right)
+
+  color_code: |-
+    (?xi:
+      skyblue | royalblue | blue | darkblue | orange | orangered | crimson | red | firebrick | darkred
+      | green | limegreen | seagreen | teal | deeppink | tomato | coral | purple | indigo | burlywood
+      | burlywood | sandybrown | chocolate | sienna | silver
+      | bgskyblue | bgroyalblue | bgblue | bgdarkblue | bgorange | bgorangered | bgcrimson | bgred | bgfirebrick | bgdarkred
+      | bggreen | bglimegreen | bgseagreen | bgteal | bgdeeppink | bgtomato | bgcoral | bgpurple | bgindigo | bgburlywood
+      | bgburlywood | bgsandybrown | bgchocolate | bgsienna | silver
+    )
+
+  hex_code: '#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})'
+
+contexts:
+  main:
+    - meta_scope: text.xml
+    - include: codes
+
+  codes:
+    # [b]
+    - match: \[b\]
+      scope: keyword.control
+      push: b
+    # [i]
+    - match: \[i\]
+      scope: keyword.control
+      push: i
+    # [u]
+    - match: \[u\]
+      scope: keyword.control
+      push: u
+    # [h]
+    - match: \[h\]
+      scope: keyword.control
+      push: h
+    # [l]
+    - match: \[l\]
+      scope: keyword.control
+      push: l
+    # [r]
+    - match: \[r\]
+      scope: keyword.control
+      push: r
+    # [del]
+    - match: \[del\]
+      scope: keyword.control
+      push: del
+    # [code]
+    - match: \[code\]
+      scope: punctuation.definition.keyword
+      push: code
+    # [quote]
+    - match: \[quote\]
+      scope: keyword.control
+      push: quote
+
+    # [randomblock]
+    - match: \[randomblock\]
+      scope: keyword.control
+      push: randomblock
+
+    # [style ...]
+    - match: \[style (.[^\]\b]+)\]
+      scope: punctuation.definition.keyword
+      push: style
+
+    # [img]
+    - match: \[img\](.+?)\[/img\]
+      scope: keyword.operator
+
+    # [url]
+    - match: \[url\](.+?)\[/url\]
+      scope: markup.underline.link
+    # [url=x]
+    - match: \[url=([^]]+)\]
+      scope: keyword.control
+      captures:
+        1: markup.underline.link
+      push: url
+
+    # [tid]
+    - match: \[tid\](\d+)\[/tid\]
+      scope: keyword.control
+      captures:
+        1: constant.numeric
+    # [tid=x]
+    - match: (\[tid=(\d+)\])(.+?)(\[/tid\])
+      captures:
+        1: keyword.control
+        2: constant.numeric
+        3: text.xml
+        4: keyword.control
+
+    # [pid]
+    - match: \[pid\](\d+),(\d+),(\d+)\[/pid\]
+      scope: keyword.control
+      captures:
+        1: constant.numeric
+        2: constant.numeric
+        3: constant.numeric
+    # [pid=x]
+    - match: (\[pid=(\d+),(\d+),(\d+)\])(.+?)(\[/pid\])
+      captures:
+        1: keyword.control
+        2: constant.numeric
+        3: constant.numeric
+        4: constant.numeric
+        5: text.xml
+        6: keyword.control
+
+    # [uid]
+    - match: \[uid\](\d+)\[/uid\]
+      scope: keyword.control
+      captures:
+        1: constant.numeric
+    # [uid=x]
+    - match: (\[uid=(\d+)\])(.+?)(\[/uid\])
+      captures:
+        1: keyword.control
+        2: constant.numeric
+        3: text.xml
+        4: keyword.control
+
+    # [align=left|center|right]
+    - match: \[align=({{algin_code}})\]
+      scope: keyword.control
+      push: align
+
+    # [color=x]
+    - match: \[color=({{color_code}})\]
+      scope: keyword.control
+      captures:
+        1: variable.parameter
+      push: color
+
+    # [size=x%]
+    - match: \[size=(\d+%)\]
+      scope: keyword.control
+      captures:
+        1: constant.numeric
+      push: size
+
+    # [collapse]
+    - match: \[collapse\]
+      scope: keyword.control
+      push: collapse
+    # [collapse=x]
+    - match: \[collapse=([^]]+)\]
+      scope: keyword.control
+      captures:
+        1: constant.language
+      push: collapse
+
+    # [table]
+    - match: \[table\]
+      scope: punctuation.definition.keyword
+      push: table
+
+    # [list]
+    - match: \[list\]
+      scope: punctuation.definition.keyword
+      push: list
+
+    ### SPECIAL ###
+    - match: \b__(.*?)__\b
+      scope: constant.language
+
+  b:
+    - include: codes
+    # [/b]
+    - match: \[/b\]
+      scope: keyword.control
+      pop: 1
+
+  i:
+    - include: codes
+    # [/i]
+    - match: \[/i\]
+      scope: keyword.control
+      pop: 1
+
+  u:
+    - include: codes
+    # [/u]
+    - match: \[/u\]
+      scope: keyword.control
+      pop: 1
+
+  h:
+    - meta_scope: markup.bold
+    - include: codes
+    # [/h]
+    - match: \[/h\]
+      scope: keyword.control
+      pop: 1
+
+  l:
+    - include: codes
+    # [/l]
+    - match: \[/l\]
+      scope: keyword.control
+      pop: 1
+
+  r:
+    - include: codes
+    # [/r]
+    - match: \[/r\]
+      scope: keyword.control
+      pop: 1
+
+  del:
+    - include: codes
+    # [/del]
+    - match: \[/del\]
+      scope: keyword.control
+      pop: 1
+
+  code:
+    - meta_scope: comment
+    # [/code]
+    - match: \[/code\]
+      scope: punctuation.definition.keyword
+      pop: 1
+
+  quote:
+    - include: codes
+    # [/quote]
+    - match: \[/quote\]
+      scope: keyword.control
+      pop: 1
+
+  randomblock:
+    - include: codes
+    # [fixsize height x width x x background #xxx]
+    - match: \[fixsize height (\d*\.?\d+) width (\d*\.?\d+) (\d*\.?\d+) background ({{hex_code}})\]
+      scope: punctuation.definition.keyword
+      captures:
+        1: constant.numeric
+        2: constant.numeric
+        3: constant.numeric
+        4: constant.numeric
+    # [fixsize height x width x x background #xxx #xxx]
+    - match: \[fixsize height (\d*\.?\d+) width (\d*\.?\d+) (\d*\.?\d+) background ({{hex_code}}) ({{hex_code}})\]
+      scope: punctuation.definition.keyword
+      captures:
+        1: constant.numeric
+        2: constant.numeric
+        3: constant.numeric
+        4: constant.numeric
+        6: constant.numeric
+    # [/randomblock]
+    - match: \[/randomblock\]
+      scope: keyword.control
+      pop: 1
+
+  style:
+    - include: codes
+    # [/style]
+    - match: \[/style\]
+      scope: punctuation.definition.keyword
+      pop: 1
+  
+  url:
+    - include: codes
+    # [/align]
+    - match: \[/url\]
+      scope: keyword.control
+      pop: 1
+
+  align:
+    - include: codes
+    # [/align]
+    - match: \[/align\]
+      scope: keyword.control
+      pop: 1
+
+  color:
+    - include: codes
+    # [/color]
+    - match: \[/color\]
+      scope: keyword.control
+      pop: 1
+
+  size:
+    - include: codes
+    # [/size]
+    - match: \[/size\]
+      scope: keyword.control
+      pop: 1
+
+  collapse:
+    - include: codes
+    # [/collapse]
+    - match: \[/collapse\]
+      scope: keyword.control
+      pop: 1
+
+  table:
+    # [tr]
+    - match: \[tr\]
+      scope: variable.function
+      push: tr
+    # [tr rowspan=x]
+    - match: \[tr rowspan=(\d+)\]
+      scope: variable.function
+      captures:
+        1: constant.numeric
+      push: tr
+    # [/table]
+    - match: \[/table\]
+      scope: punctuation.definition.keyword
+      pop: 1
+
+  tr:
+    # [td]
+    - match: \[td\]
+      scope: variable.parameter
+      push: td
+    # [tdx]
+    - match: \[td(\d+)\]
+      scope: variable.parameter
+      captures:
+        1: constant.numeric
+      push: td
+    # [td width=x] / [td colspan=x] / [td rowspan=x]
+    - match: \[td (width|colspan|rowspan)=(\d+)\]
+      scope: variable.parameter
+      captures:
+        2: constant.numeric
+      push: td
+    # [td colspan=x width=y] / [td rowspan=x width=y]
+    - match: \[td (colspan|rowspan)=(\d+) width=(\d+)\]
+      scope: variable.parameter
+      captures:
+        2: constant.numeric
+        3: constant.numeric
+      push: td
+    # [/tr]
+    - match: \[/tr\]
+      scope: variable.function
+      pop: 1
+
+  td:
+    - include: codes
+    # [/td]
+    - match: \[/td\]
+      scope: variable.parameter
+      pop: 1
+
+  list:
+    # [*]
+    - match: \[\*\]
+      scope: variable.function
+    - include: codes
+    # [/list]
+    - match: \[/list\]
+      scope: punctuation.definition.keyword
+      pop: 1

@@ -1,0 +1,28 @@
+SublimeBBS_NGA v0.1 Release Notes [2025-03-20]
+=====================================
+
+
+支持的语法高亮
+----------------
+i / u / del / l / r / h / quote / collapse / list / table / code / color / size / img / url / tid / pid / uid / randomblock / fixsize / style / __高亮占位符__
+
+
+支持的语法补全
+----------------
+基础代码：i / u / del / l / r / h / quote / collapse / list / table / tr / td / url / randomblock
+颜色代码：silver / red / green / blue / 以及它们的加粗版本
+特殊：vv(空行占位符) / size(large/small/tiny) / split(分割符) / img(折叠)
+
+
+专楼模板
+----------------
+角色模块
+视频模块
+先行情报模块
+主楼整体
+
+
+已知问题
+----------------
+style：在randomblock块外仍然正常高亮(style必须要在randomblock中才不会报错，因此在randomblock块外的style不应该高亮显示)
+style：高亮显示未完成，没能正确将style后面的参数正确变色
