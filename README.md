@@ -5,8 +5,6 @@ SublimeBBCodeNGA
 
 覆盖 NGA 常用 BBCode 的**语法高亮**、**代码片段**。
 
-vsc缺一个 \__xx__
-
 ## 特性
 
 - **语法高亮**
