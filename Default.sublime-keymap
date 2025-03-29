@@ -6,7 +6,7 @@
             {
                 "key": "selector",
                 "operator": "equal",
-                "operand": "source.bbs_nga"
+                "operand": "source.bbcode.nga"
             }
         ]
     },
@@ -17,7 +17,7 @@
             {
                 "key": "selector",
                 "operator": "equal",
-                "operand": "source.bbs_nga"
+                "operand": "source.bbcode.nga"
             }
         ]
     },
@@ -28,7 +28,18 @@
             {
                 "key": "selector",
                 "operator": "equal",
-                "operand": "source.bbs_nga"
+                "operand": "source.bbcode.nga"
+            }
+        ]
+    },
+    {
+        "keys": ["ctrl+q"],
+        "command": "toggle_quote",
+        "context": [
+            {
+                "key": "selector",
+                "operator": "equal",
+                "operand": "source.bbcode.nga"
             }
         ]
     }

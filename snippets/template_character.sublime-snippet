@@ -1,6 +1,6 @@
 <snippet>
 	<content><![CDATA[
-[table]
+$1[table]
 [tr]
 [td20][align=center][quote]__角色头像图__[/quote]
 __角色名__
@@ -25,7 +25,40 @@ __角色名__
 [td30][quote][align=center]__角色立绘图__[/align][/quote][/td]
 [td70]
 [size=150%][b]__角色名__[/b][/size][h][/h]
-CV：__CV名__
+CV: __CV名__
+[align=right].[/align]__文本__
+[/td]
+[/tr]
+[/table]
+[/collapse][collapse=__角色名__]
+[table]
+[tr]
+[td30][quote][align=center]__角色立绘图__[/align][/quote][/td]
+[td70]
+[size=150%][b]__角色名__[/b][/size][h][/h]
+CV: __CV名__
+[align=right].[/align]__文本__
+[/td]
+[/tr]
+[/table]
+[/collapse][collapse=__角色名__]
+[table]
+[tr]
+[td30][quote][align=center]__角色立绘图__[/align][/quote][/td]
+[td70]
+[size=150%][b]__角色名__[/b][/size][h][/h]
+CV: __CV名__
+[align=right].[/align]__文本__
+[/td]
+[/tr]
+[/table]
+[/collapse][collapse=__角色名__]
+[table]
+[tr]
+[td30][quote][align=center]__角色立绘图__[/align][/quote][/td]
+[td70]
+[size=150%][b]__角色名__[/b][/size][h][/h]
+CV: __CV名__
 [align=right].[/align]__文本__
 [/td]
 [/tr]
@@ -41,41 +74,8 @@ CV：__CV名__
 [/td]
 [/tr]
 [/table]
-[/collapse][collapse=__角色名__]
-[table]
-[tr]
-[td30][quote][align=center]__角色立绘图__[/align][/quote][/td]
-[td70]
-[size=150%][b]__角色名__[/b][/size][h][/h]
-CV：__CV名__
-[align=right].[/align]__文本__
-[/td]
-[/tr]
-[/table]
-[/collapse][collapse=__角色名__]
-[table]
-[tr]
-[td30][quote][align=center]__角色立绘图__[/align][/quote][/td]
-[td70]
-[size=150%][b]__角色名__[/b][/size][h][/h]
-CV：__CV名__
-[align=right].[/align]__文本__
-[/td]
-[/tr]
-[/table]
-[/collapse][collapse=__角色名__]
-[table]
-[tr]
-[td30][quote][align=center]__角色立绘图__[/align][/quote][/td]
-[td70]
-[size=150%][b]__角色名__[/b][/size][h][/h]
-CV：__CV名__
-[align=right].[/align]__文本__
-[/td]
-[/tr]
-[/table]
-[/collapse]
+[/collapse]$2
 ]]></content>
 	<tabTrigger>template_character</tabTrigger>
-	<scope>source.bbs_nga</scope>
+	<scope>source.bbcode.nga</scope>
 </snippet>

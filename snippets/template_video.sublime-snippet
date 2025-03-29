@@ -1,6 +1,6 @@
 <snippet>
 	<content><![CDATA[
-[table]
+$1[table]
 [tr]
 [td33][align=center][quote]__PV封面图__[/quote]
 [url=__视频B站地址__]PV1[/url]
@@ -12,8 +12,8 @@
 [url=__视频B站地址__]PV3[/url]
 20xx年/x月/x日[/align][/td]
 [/tr]
-[/table]
+[/table]$2
 ]]></content>
 	<tabTrigger>template_video</tabTrigger>
-	<scope>source.bbs_nga</scope>
+	<scope>source.bbcode.nga</scope>
 </snippet>

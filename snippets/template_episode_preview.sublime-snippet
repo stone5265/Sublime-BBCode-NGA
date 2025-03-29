@@ -1,6 +1,6 @@
 <snippet>
 	<content><![CDATA[
-[b][size=120%]#__episode__ __标题__[/size][/b]
+$1[b][size=120%]#__episode__ __标题__[/size][/b]
 __简介__
 [collapse=先行图(x张)]
 __图__
@@ -9,8 +9,8 @@ __图__
 [collapse=原文]
 [color=silver][b][size=120%]#__episode__ __标题原文__[/size][/b]
 __简介原文__
-[/color][/collapse]
+[/color][/collapse]$2
 ]]></content>
 	<tabTrigger>template_episode_preview</tabTrigger>
-	<scope>source.bbs_nga</scope>
+	<scope>source.bbcode.nga</scope>
 </snippet>

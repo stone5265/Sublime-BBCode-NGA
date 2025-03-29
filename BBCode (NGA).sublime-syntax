@@ -1,12 +1,11 @@
 %YAML 1.2
 ---
-# See http://www.sublimetext.com/docs/syntax.html
-# v0.2 New: [font]
-name: BBS-NGA
+# v1.0 ****RENAME & RECONSTRUCT**** New: [sup]
+name: BBCode (NGA)
 file_extensions:
   - nga
   - bbsnga
-scope: source.bbs_nga
+scope: source.bbcode.nga
 
 variables:
   algin_code: |-
@@ -19,7 +18,7 @@ variables:
       | burlywood | sandybrown | chocolate | sienna | silver
       | bgskyblue | bgroyalblue | bgblue | bgdarkblue | bgorange | bgorangered | bgcrimson | bgred | bgfirebrick | bgdarkred
       | bggreen | bglimegreen | bgseagreen | bgteal | bgdeeppink | bgtomato | bgcoral | bgpurple | bgindigo | bgburlywood
-      | bgburlywood | bgsandybrown | bgchocolate | bgsienna | silver
+      | bgburlywood | bgsandybrown | bgchocolate | bgsienna | bgsilver
     )
 
   font_code: |-
@@ -37,15 +36,16 @@ contexts:
     - include: special
 
   main:
-    - include: codes
+    - include: tags
 
-  codes:
+  tags:
     - include: b
     - include: i
     - include: u
     - include: h
     - include: l
     - include: r
+    - include: sup
     - include: del
     - include: code
     - include: quote
@@ -72,356 +72,377 @@ contexts:
 ###[b]#########################################################
   b:
     - match: \[b\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       push: b-body
 
   b-body:
-    - meta_scope: meta.b.bbs_nga
-    - include: codes
+    - meta_scope: meta.b.bbcode.nga
+    - include: tags
     - match: \[/b\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
 ###[i]#########################################################
   i:
     - match: \[i\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       push: i-body
 
   i-body:
-    - meta_scope: meta.i.bbs_nga
-    - include: codes
+    - meta_scope: meta.i.bbcode.nga
+    - include: tags
     - match: \[/i\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
 ###[u]#########################################################
   u:
     - match: \[u\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       push: u-body
 
   u-body:
-    - meta_scope: meta.u.bbs_nga
-    - include: codes
+    - meta_scope: meta.u.bbcode.nga
+    - include: tags
     - match: \[/u\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
 ###[h]#########################################################
   h:
     - match: \[h\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       push: h-body
 
   h-body:
-    - meta_scope: meta.h.bbs_nga
+    - meta_scope: meta.h.bbcode.nga
     - meta_content_scope: markup.bold
-    - include: codes
+    - include: tags
     - match: \[/h\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
 ###[l]#########################################################
   l:
     - match: \[l\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       push: l-body
 
   l-body:
-    - meta_scope: meta.l.bbs_nga
-    - include: codes
+    - meta_scope: meta.l.bbcode.nga
+    - include: tags
     - match: \[/l\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
 ###[r]#########################################################
   r:
     - match: \[r\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       push: r-body
 
   r-body:
-    - meta_scope: meta.r.bbs_nga
-    - include: codes
+    - meta_scope: meta.r.bbcode.nga
+    - include: tags
     - match: \[/r\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
+      pop: 1
+
+###[sup]#########################################################
+  sup:
+    - match: \[sup\]
+      scope: keyword.tag.bbcode.nga
+      push: r-body
+
+  sup-body:
+    - meta_scope: meta.sup.bbcode.nga
+    - include: tags
+    - match: \[/sup\]
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
 ###[del]########################################################
   del:
     - match: \[del\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       push: del-body
 
   del-body:
-    - meta_scope: meta.del.bbs_nga
-    - include: codes
+    - meta_scope: meta.del.bbcode.nga
+    - include: tags
     - match: \[/del\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
 ###[code]######################################################
   code:
     - match: \[code\]
-      scope: punctuation.definition.keyword
+      scope: punctuation.definition.keyword.tag.bbcode.nga
       push: code-body
 
   code-body:
     - meta_include_prototype: false
-    - meta_scope: meta.code.bbs_nga
+    - meta_scope: meta.code.bbcode.nga
     - meta_content_scope: comment
     - match: \[/code\]
-      scope: punctuation.definition.keyword
+      scope: punctuation.definition.keyword.tag.bbcode.nga
       pop: 1
 
 ###[quote]#####################################################
   quote:
     - match: \[quote\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       push: quote-body
 
   quote-body:
-    - meta_scope: meta.quote.bbs_nga
-    - include: codes
+    - meta_scope: meta.quote.bbcode.nga
+    - include: tags
     - match: \[/quote\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
 ###[img]######################################################
   img:
     - match: \[img\](.+?)\[/img\]
-      scope: keyword.operator
+      scope: keyword.operator.tag.bbcode.nga
+      captures:
+        1: keyword.operator
 
 ###[url]######################################################
   url:
     - match: \[url\](.+?)\[/url\]
       scope: markup.underline.link
-    - match: \[url=([^]]+)\]
-      scope: keyword.control
+    - match: \[url=([^\]]+)\]
+      scope: keyword.tag.bbcode.nga
       captures:
         1: markup.underline.link
       push: url-body
 
   url-body:
-    - meta_scope: meta.url.bbs_nga
-    - include: codes
+    - meta_scope: meta.url.bbcode.nga
+    - include: tags
     - match: \[/url\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
 ###[tid]#######################################################
   tid:
     - match: \[tid\](\d+)\[/tid\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       captures:
         1: constant.numeric
     - match: (\[tid=(\d+)\])(.+?)(\[/tid\])
       captures:
-        1: keyword.control
+        1: keyword.tag.bbcode.nga
         2: constant.numeric
-        3: text.xml
-        4: keyword.control
+        3: meta.tid.bbcode.nga
+        4: keyword.tag.bbcode.nga
 
 ###[pid]#########################################################
   pid:
-    - match: \[pid\](\d+),(\d+),(\d+)\[/pid\]
-      scope: keyword.control
+    - match: \[pid\](\d+,\d+,\d+)\[/pid\]
+      scope: keyword.tag.bbcode.nga
       captures:
         1: constant.numeric
-        2: constant.numeric
-        3: constant.numeric
-    - match: (\[pid=(\d+),(\d+),(\d+)\])(.+?)(\[/pid\])
+    - match: (\[pid=(\d+,\d+,\d+)\])(.+?)(\[/pid\])
       captures:
-        1: keyword.control
+        1: keyword.tag.bbcode.nga
         2: constant.numeric
-        3: constant.numeric
-        4: constant.numeric
-        5: text.xml
-        6: keyword.control
+        3: meta.pid.bbcode.nga
+        4: keyword.tag.bbcode.nga
 
 ###[uid]##########################################################
   uid:
     - match: \[uid\](\d+)\[/uid\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       captures:
         1: constant.numeric
     - match: (\[uid=(\d+)\])(.+?)(\[/uid\])
       captures:
-        1: keyword.control
+        1: keyword.tag.bbcode.nga
         2: constant.numeric
-        3: text.xml
-        4: keyword.control
+        3: meta.uid.bbcode.nga
+        4: keyword.tag.bbcode.nga
 
 
 ###[align]####################################################
   align:
     - match: \[align=({{algin_code}})\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       push: align-body
 
   align-body:
-    - meta_scope: meta.align.bbs_nga
-    - include: codes
+    - meta_scope: meta.align.bbcode.nga
+    - include: tags
     - match: \[/align\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
 ###[color]####################################################
   color:
     - match: \[color=({{color_code}})\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       captures:
         1: variable.parameter
       push: color-body
 
   color-body:
-    - meta_scope: meta.color.bbs_nga
-    - include: codes
+    - meta_scope: meta.color.bbcode.nga
+    - include: tags
     - match: \[/color\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
 ###[font]####################################################
   font:
     - match: \[font=({{font_code}})\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       captures:
         1: variable.parameter
       push: font-body
 
   font-body:
-    - meta_scope: meta.font.bbs_nga
-    - include: codes
+    - meta_scope: meta.font.bbcode.nga
+    - include: tags
     - match: \[/font\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
-###[font]####################################################
+###[size]####################################################
   size:
+    - match: \[size=0%\]
+      scope: comment.tag.bbcode.nga
+      push: size-body-comment
     - match: \[size=(\d+%)\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       captures:
         1: constant.numeric
       push: size-body
 
   size-body:
-    - meta_scope: meta.size.bbs_nga
-    - include: codes
+    - meta_scope: meta.size.bbcode.nga
+    - include: tags
     - match: \[/size\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
+      pop: 1
+
+  size-body-comment:
+    - meta_scope: comment.bbcode.nga
+    - include: tags
+    - match: \[/size\]
+      scope: comment.tag.bbcode.nga
       pop: 1
 
 ###[collapse]####################################################
   collapse:
     - match: \[collapse\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       push: collapse-body
-    - match: \[collapse=([^]]+)\]
-      scope: keyword.control
+    - match: \[collapse=([^\]]+)\]
+      scope: keyword.tag.bbcode.nga
       captures:
         1: constant.language
       push: collapse-body
 
   collapse-body:
-    - meta_scope: meta.collapse.bbs_nga
-    - include: codes
+    - meta_scope: meta.collapse.bbcode.nga
+    - include: tags
     - match: \[/collapse\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
 ###[table]########################################################
   table:
     - match: \[table\]
-      scope: punctuation.definition.keyword
+      scope: punctuation.definition.keyword.tag.bbcode.nga
       push: table-body
 
   table-body:
-    - meta_scope: meta.table.bbs_nga
+    - meta_scope: meta.table.bbcode.nga
     - include: tr
     - match: \[/table\]
-      scope: punctuation.definition.keyword
+      scope: punctuation.definition.keyword.tag.bbcode.nga
       pop: 1
-  
+
   tr:
     - match: \[tr\]
-      scope: variable.function
+      scope: variable.function.tag.bbcode.nga
       push: tr-body
 
   tr-body:
-    - meta_scope: meta.tr.bbs_nga
+    - meta_scope: meta.tr.bbcode.nga
     - include: td
     - match: \[/tr\]
-      scope: variable.function
+      scope: variable.function.tag.bbcode.nga
       pop: 1
 
   td:
     - match: \[td\]
-      scope: variable.parameter
+      scope: variable.parameter.tag.bbcode.nga
       push: td-body
     - match: \[td(\d+)\]
-      scope: variable.parameter
+      scope: variable.parameter.tag.bbcode.nga
       captures:
         1: constant.numeric
       push: td-body
     - match: \[td (width|colspan|rowspan)=(\d+)\]
-      scope: variable.parameter
+      scope: variable.parameter.tag.bbcode.nga
       captures:
         2: constant.numeric
       push: td-body
     - match: \[td (colspan|rowspan)=(\d+) width=(\d+)\]
-      scope: variable.parameter
+      scope: variable.parameter.tag.bbcode.nga
       captures:
         2: constant.numeric
         3: constant.numeric
       push: td-body
 
   td-body:
-    - meta_scope: meta.td.bbs_nga
-    - include: codes
+    - meta_scope: meta.td.bbcode.nga
+    - include: tags
     - match: \[/td\]
-      scope: variable.parameter
+      scope: variable.parameter.tag.bbcode.nga
       pop: 1
 
 ###[list]########################################################
   list:
     - match: \[list\]
-      scope: punctuation.definition.keyword
+      scope: punctuation.definition.keyword.tag.bbcode.nga
       push: list-body
 
   list-body:
-    - meta_scope: meta.list.bbs_nga
+    - meta_scope: meta.list.bbcode.nga
     - match: \[\*\]
       scope: string
-    - include: codes
+    - include: tags
     - match: \[/list\]
-      scope: punctuation.definition.keyword
+      scope: punctuation.definition.keyword.tag.bbcode.nga
       pop: 1
 
 ###[randomblock]###################################################
   randomblock:
     - match: \[randomblock\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       push: randomblock-body
 
   randomblock-body:
-    - meta_scope: meta.randomblock.bbs_nga
-    - include: codes
+    - meta_scope: meta.randomblock.bbcode.nga
+    - include: tags
     - include: fixsize
     - match: \[/randomblock\]
-      scope: keyword.control
+      scope: keyword.tag.bbcode.nga
       pop: 1
 
   fixsize:
     - match: \[fixsize height (\d*\.?\d+) width (\d*\.?\d+) (\d*\.?\d+) background ({{hex_code}})\]
-      scope: punctuation.definition.keyword
+      scope: punctuation.definition.keyword.tag.bbcode.nga
       captures:
         1: constant.numeric
         2: constant.numeric
         3: constant.numeric
         4: constant.numeric
     - match: \[fixsize height (\d*\.?\d+) width (\d*\.?\d+) (\d*\.?\d+) background ({{hex_code}}) ({{hex_code}})\]
-      scope: punctuation.definition.keyword
+      scope: punctuation.definition.keyword.tag.bbcode.nga
       captures:
         1: constant.numeric
         2: constant.numeric
@@ -431,12 +452,12 @@ contexts:
 
   style:
     - match: \[style (.[^\]\b]+)\]
-      scope: punctuation.definition.keyword
+      scope: punctuation.definition.keyword.tag.bbcode.nga
       push: style-body
 
   style-body:
-    - meta_scope: meta.style.bbs_nga
-    - include: codes
+    - meta_scope: meta.style.bbcode.nga
+    - include: tags
     - match: \[/style\]
-      scope: punctuation.definition.keyword
+      scope: punctuation.definition.keyword.tag.bbcode.nga
       pop: 1

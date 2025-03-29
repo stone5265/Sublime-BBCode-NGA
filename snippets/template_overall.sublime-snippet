@@ -1,6 +1,6 @@
 <snippet>
 	<content><![CDATA[
-[quote][align=center]__banner图__[/align][/quote]
+$1[quote][align=center]__banner图__[/align][/quote]
 [quote][align=center]__最新视觉图__
 [collapse=其他视觉图(2张)]__其他视觉图2__
 __其他视觉图1__[/collapse][/align][/quote]
@@ -23,7 +23,7 @@ __视频模块__
 [h]&#9724; STAFF[/h]
 [quote]
 __STAFF表格__
-官网：__官网域名__
+官网: __官网域名__
 [/quote]
 [h]&#9724; MUSIC[/h]
 [quote]
@@ -33,19 +33,19 @@ __STAFF表格__
 [td50][align=center][quote]__OP动画版封面图__[/quote]
 《__OP名__》
 __歌手__
-作詞：__作者名__
-作曲：__作者名__
-編曲：__作者名__[/align][/td]
+作詞: __作者名__
+作曲: __作者名__
+編曲: __作者名__[/align][/td]
 [td50][align=center][quote]__ED动画版封面图__[/quote]
 《__ED名__》
 __歌手__
-作詞：__作者名__
-作曲：__作者名__
-編曲：__作者名__[/align][/td]
+作詞: __作者名__
+作曲: __作者名__
+編曲: __作者名__[/align][/td]
 [/tr]
 [/table]
-[/quote]
+[/quote]$2
 ]]></content>
 	<tabTrigger>template_overall</tabTrigger>
-	<scope>source.bbs_nga</scope>
+	<scope>source.bbcode.nga</scope>
 </snippet>

@@ -1,135 +1,166 @@
-// v0.2 New: ccode
+// v1.0 New: ssup
 {
-	"scope": "source.bbs_nga",
+	"scope": "source.bbcode.nga",
 
 	"completions":
 	[
 		{
 			"trigger": "bb",
 			"contents": "[b]${1:__文本__}[/b]",
-			"annotation": "加粗"
+			"annotation": "[b][/b]",
+            "details": "加粗"
 		},
 		{
 			"trigger": "ii",
 			"contents": "[i]${1:__文本__}[/i]",
-			"annotation": "斜体"
+			"annotation": "[i][/i]",
+			"details": "斜体"
 		},
 		{
 			"trigger": "uu",
 			"contents": "[u]${1:__文本__}[/u]",
-			"annotation": "下划线"
+			"annotation": "[u][/u]",
+			"details": "下划线"
 		},
 		{
 			"trigger": "hh",
 			"contents": "[h]$1[/h]",
-			"annotation": "标题"
+			"annotation": "[h][/h]",
+			"details": "标题"
 		},
 		{
 			"trigger": "ll",
 			"contents": "[l]${1:__内容__}[/l]",
-			"annotation": "左悬浮"
+			"annotation": "[l][/l]",
+			"details": "左悬浮"
 		},
 		{
 			"trigger": "rr",
 			"contents": "[r]${1:__内容__}[/r]",
-			"annotation": "右悬浮"
+			"annotation": "[r][/r]",
+			"details": "右悬浮"
+		},
+		{
+			"trigger": "ssup",
+			"contents": "[sup]${1:__内容__}[/sup]",
+			"annotation": "[sup][/sup]",
+			"details": "上标"
 		},
 		{
 			"trigger": "ddel",
 			"contents": "[del]${1:__文本__}[/del]",
-			"annotation": "删除线"
+			"annotation": "[del][/del]",
+			"details": "删除线"
 		},
 		{
 			"trigger": "rrandomblock",
 			"contents": "[randomblock]\n${1:__内容__}\n[/randomblock]",
-			"annotation": "randomblock"
+			"annotation": "[randomblock][/randomblock]",
+			"details": "randomblock"
 		},
 		{
 			"trigger": "qquote",
 			"contents": "[quote]${1:__内容__}[/quote]",
-			"annotation": "引用"
+			"annotation": "[quote][/quote]",
+			"details": "引用"
 		},
 		{
 			"trigger": "ccode",
 			"contents": "[code]${1:__内容__}[/code]",
-			"annotation": "代码块"
+			"annotation": "[code][/code]",
+			"details": "代码块"
 		},
 		{
 			"trigger": "ccollapse",
 			"contents": "[collapse=${1:__提要__}]${2:__内容__}[/collapse]",
-			"annotation": "折叠"
+			"annotation": "[collapse=][/collapse]",
+			"details": "折叠"
 		},
 		{
 			"trigger": "aalign",
 			"contents": "[align=${1:center}]${2:__内容__}[/align]",
-			"annotation": "对齐方式"
+			"annotation": "[align=center][/align]",
+			"details": "对齐方式"
 		},
 		{
 			"trigger": "uurl",
 			"contents": "[url=__url__]${1:__描述__}[/url]",
-			"annotation": "url"
+			"annotation": "[url=][/url]",
+			"details": "url"
 		},
 		{
 			"trigger": "ttable",
 			"contents": "[table]\n[tr][td]${1:__内容__}[/td][/tr]\n[/table]",
-			"annotation": "单格表格"
+			"annotation": "[table][tr][td][/td][tr][/table]",
+			"details": "单格表格"
 		},
 		{
 			"trigger": "ttr",
 			"contents": "[tr]$1[/tr]",
-			"annotation": "单行"
+			"annotation": "[tr][/tr]",
+			"details": "单行"
 		},
 		{
 			"trigger": "ttd",
 			"contents": "[td]${1:__内容__}[/td]",
-			"annotation": "单列"
+			"annotation": "[td][/td]",
+			"details": "单列"
 		},
 		{
 			"trigger": "llist",
 			"contents": "[list]\n[*]${1:__内容__}\n[/list]",
-			"annotation": "列表"
+			"annotation": "[list][*][/list]",
+			"details": "列表"
 		},
 
 		// COLOR
 		{
 			"trigger": "silver",
 			"contents": "[color=silver]${1:__文本__}[/color]",
-			"annotation": "color=silver"
+			"annotation": "[color=silver][/color]",
+			"details": "灰色"
 		},
 		{
 			"trigger": "red",
 			"contents": "[color=red]${1:__文本__}[/color]",
-			"annotation": "color=red"
+			"annotation": "[color=red][/color]",
+			"details": "红色"
 		},
 		{
 			"trigger": "green",
 			"contents": "[color=green]${1:__文本__}[/color]",
-			"annotation": "color=green"
+			"annotation": "[color=green][/color]",
+			"details": "绿色"
 		},
 		{
 			"trigger": "blue",
 			"contents": "[color=blue]${1:__文本__}[/color]",
-			"annotation": "color=blue"
+			"annotation": "[color=blue][/color]",
+			"details": "蓝色"
 		},
 		{
 			"trigger": "ssilver",
 			"contents": "[color=silver][b]${1:__文本__}[/b][/color]",
-			"annotation": "color=silver(bold)"
+			"annotation": "[color=silver][b][/b][/color]",
+			"details": "深灰色"
 		},
 		{
 			"trigger": "rred",
 			"contents": "[color=red][b]${1:__文本__}[/b][/color]",
-			"annotation": "color=red(bold)"
+			"annotation": "[color=red][b][/b][/color]",
+			"details": "深红色"
 		},
 		{
 			"trigger": "ggreen",
 			"contents": "[color=green][b]${1:__文本__}[/b][/color]",
-			"annotation": "color=green(bold)"
+			"annotation": "[color=green][b][/b][/color]",
+			"details": "深绿色"
 		},
 		{
 			"trigger": "bblue",
 			"contents": "[color=blue][b]${1:__文本__}[/b][/color]",
-			"annotation": "color=blue(bold)"
+			"annotation": "[color=blue][b][/b][/color]",
+			"details": "深蓝色"
 		},
 
 
@@ -137,42 +168,50 @@
 		{
 			"trigger": "vv",
 			"contents": "[align=right].[/align]$1",
-			"annotation": "空行占位符"
+			"annotation": "[align=right].[/align]",
+			"details": "空行占位符"
 		},
 		{
 			"trigger": "large",
 			"contents": "[size=150%]${1:__文本__}[/size]",
-			"annotation": "size=150%"
+			"annotation": "[size=150%][/size]",
+			"details": "size=150%"
 		},
 		{
 			"trigger": "small",
 			"contents": "[size=60%]${1:__文本__}[/size]",
-			"annotation": "size=60%"
+			"annotation": "[size=60%][/size]",
+			"details": "size=60%"
 		},
 		{
 			"trigger": "tiny",
 			"contents": "[size=1%]${1:__文本__}[/size]",
-			"annotation": "size=1%"
+			"annotation": "[size=1%][/size]",
+			"details": "size=1%"
 		},
 		{
-			"trigger": "split",
-			"contents": "[size=1%]卝[/size]$1",
-			"annotation": "分割敏感词,防止卡审核"
+			"trigger": "zz",
+			"contents": "[size=0%]卝[/size]$1",
+			"annotation": "[size=0%]卝[/size]",
+			"details": "分割敏感词,防止卡审核"
 		},
 		{
 			"trigger": "iimg",
-			"contents": "[quote][align=center]${1:__图__}[/align][/quote]",
-			"annotation": "(包裹起来的)图片占位符"
+			"contents": "[quote]__图__[/quote]$1",
+			"annotation": "[quote]__图__[/quote]",
+			"details": "(包裹起来的)图片占位符"
 		},
 		{
 			"trigger": "collapse_img",
 			"contents": "[collapse]__图__\n[/collapse]$1",
-			"annotation": "折叠的图片"
+			"annotation": "[collapse]__图__[/collapse]",
+			"details": "折叠的图片"
 		},
 		{
 			"trigger": "collapse_img2",
 			"contents": "[collapse=${1:描述}]__图__\n[/collapse]$2",
-			"annotation": "折叠的图片(带描述)"
+			"annotation": "[collapse=]__图__[/collapse]",
+			"details": "折叠的图片(带描述)"
 		},
 	]
 }
