@@ -4,7 +4,7 @@ SublimeBBCodeNGA v1.1 unRelease Notes [2025-xx-xx]
 
 CHANGES/FIXES
 ----------------
-- 新增: 右键菜单中的"表格转为Markdown格式"功能: 目前仅支持基础表格 (加粗/斜体/删除线/代码/url)
+- 新增: 右键菜单中的"表格转为Markdown格式"功能: 目前仅支持基础表格 (加粗/斜体/删除线/代码/url) (会补全NGA图床图片的完整URL)
 
 
 TODO

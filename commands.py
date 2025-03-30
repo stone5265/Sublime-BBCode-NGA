@@ -5,6 +5,7 @@ from collections import defaultdict
  
 
 __NGA_DOMAIN__ = "(" + "|".join(["bbs.nga.cn", "ngabbs.com", "nga.178.com"]) + ")"
+__NGA_IMAGE_HOSTING__ = 'https://img.nga.178.com/attachments'
 __BBCODE2MARKDOWN__ = defaultdict(str)
 __BBCODE2MARKDOWN__.update({
     'b': '**',
@@ -159,7 +160,8 @@ class MarkdownTable:
         self.rows.append(self.row)
 
     def update_col(self):
-        self.row.append(self.cell.replace('\n', '<br>'))
+        self.cell = self.cell.replace('\n', '<br>')
+        self.row.append(self.cell)
         self.len_cols[self.cur_col] = max(self.len_cols[self.cur_col], len(self.cell.encode('gbk')))
 
     def update_cell(self, s):
@@ -219,7 +221,10 @@ class ToggleMarkdownTableCommand(sublime_plugin.TextCommand):
                     continue
                 
                 # 跳过不支持转换的BBCode
-                if tag not in ['table', 'tr', 'td', 'b', 'i', 'del', 'code', 'url']:
+                if tag not in ['table', 'tr', 'td', 'b', 'i', 'del', 'code', 'url', 'img']:
+                    if md_table:
+                        md_table.update_cell(self.view.substr(sublime.Region(last_pos, pos)))
+                    last_pos = end_pos
                     continue
 
                 if not is_end:
@@ -251,6 +256,7 @@ class ToggleMarkdownTableCommand(sublime_plugin.TextCommand):
                         elif tag == 'tr':
                             md_table.update_row()
                         elif tag == 'td':
+                            print(self.view.substr(sublime.Region(last_pos, pos)))
                             md_table.update_cell(self.view.substr(sublime.Region(last_pos, pos)))
                             md_table.update_col()
                         elif tag == 'url':
@@ -260,6 +266,9 @@ class ToggleMarkdownTableCommand(sublime_plugin.TextCommand):
                                 caption = url = self.view.substr(sublime.Region(last_pos, pos))
                             md_table.update_cell('[{}]({})'.format(caption, url))
                             url = None
+                        elif tag == 'img':
+                            img_url = __NGA_IMAGE_HOSTING__ + self.view.substr(sublime.Region(last_pos, pos))[1:]
+                            md_table.update_cell('[IMG]({})'.format(img_url))
                         else:
                             md_table.update_cell(__BBCODE2MARKDOWN__[tag] + self.view.substr(sublime.Region(last_pos, pos)) + __BBCODE2MARKDOWN__[tag])
                     else:
