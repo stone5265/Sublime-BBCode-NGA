@@ -62,10 +62,7 @@ class Linter(sublime_plugin.EventListener):
                 continue
 
             pos = match.start()
-            bias = len(tag)
-            bias += 3 if is_end else 2   # [tag]或者[/tag]
-            bias += len(suffix) if suffix else 0
-            region = sublime.Region(pos, pos + bias)
+            region = sublime.Region(pos, pos + len(match.group()))
 
             # 记录当前list所属[*]的区域
             if tag == "*":

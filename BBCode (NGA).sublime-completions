@@ -91,7 +91,7 @@
 		{
 			"trigger": "ttable",
 			"contents": "[table]\n[tr][td]${1:__内容__}[/td][/tr]\n[/table]",
-			"annotation": "[table][tr][td][/td][tr][/table]",
+			"annotation": "[table][tr][td][/td][/tr][/table]",
 			"details": "单格表格"
 		},
 		{

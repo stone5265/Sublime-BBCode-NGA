@@ -1,8 +1,17 @@
 import sublime
 import sublime_plugin
+import re
+from collections import defaultdict
  
 
 __NGA_DOMAIN__ = "(" + "|".join(["bbs.nga.cn", "ngabbs.com", "nga.178.com"]) + ")"
+__BBCODE2MARKDOWN__ = defaultdict(str)
+__BBCODE2MARKDOWN__.update({
+    'b': '**',
+    'i': '*',
+    'del': '~~',
+    'code': '`'
+})
 
 
 def toggle(view, edit, tag):
@@ -115,3 +124,150 @@ class CondenseUrlCommand(sublime_plugin.TextCommand):
                 # 将URL中的NGA域名精简成/
                 if "link" in scopes[-1]:
                     self.view.replace(edit, region, "/")
+
+
+class MarkdownTable:
+    def __init__(self, start_pos):
+        self.start_pos = start_pos
+        self.end_pos = -1
+        self.rows = []
+        self.len_cols = defaultdict(int)
+        self.row = []
+        self.cell = ''
+        self.cur_col = 0
+
+    @property
+    def n_cols(self):
+        return max(self.len_cols.keys())
+
+    @property
+    def region(self):
+        return sublime.Region(self.start_pos, self.end_pos) if self.end_pos != -1 else None
+
+    def new_row(self):
+        self.row = []
+        self.cur_col = 0
+
+    def new_col(self):
+        self.new_cell()
+        self.cur_col += 1
+
+    def new_cell(self):
+        self.cell = ''
+
+    def update_row(self):
+        self.rows.append(self.row)
+
+    def update_col(self):
+        self.row.append(self.cell.replace('\n', '<br>'))
+        self.len_cols[self.cur_col] = max(self.len_cols[self.cur_col], len(self.cell.encode('gbk')))
+
+    def update_cell(self, s):
+        self.cell += s
+
+    def build(self, end_pos):
+        self.end_pos = end_pos
+        filled_rows = []
+
+        for row in self.rows:
+            # 填充缺少的列
+            row += [''] * (self.n_cols - len(row))
+            # 填充单元格, 使得每个单元格长度一样 (中文占占两字节, 需要手动处理)
+            row = ['{:<{:}}'.format(cell, self.len_cols[i + 1] - len(cell.encode('gbk')) + len(cell)) for i, cell in enumerate(row)]
+            # 转为字符串
+            filled_rows.append('| ' + ' | '.join(row) + ' |')
+
+        split_row = '| ' + ' | '.join([':' + '-' * (self.len_cols[i + 1] - 1) for i in range(self.n_cols)]) + ' |'
+        filled_rows.insert(1, split_row)
+
+        # 转为字符串
+        table = '\n' + '\n'.join(filled_rows) + '\n'
+        return table
+
+
+class ToggleMarkdownTableCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        if not self.view.match_selector(0, "source.bbcode.nga"):
+            return
+
+        for select_region in self.view.sel():
+            start = select_region.begin()
+            cur_col = 0
+            row = []
+            cell = ''
+            url = None
+            len_cols = defaultdict(int)
+            md_table = None
+            replaces = []
+            
+            content = self.view.substr(select_region)
+            tag_stack = []
+            pattern = re.compile("\[(/)?([^=\[\] \d]+|\*)(\d+| [^\[\]]+|=[^\]]+)?\]")
+            for match in pattern.finditer(content):
+                is_end, tag, suffix = match.groups()
+
+                pos = start + match.start()
+                end_pos = pos + len(match.group())
+                region = sublime.Region(pos, end_pos)
+                
+                scopes = self.view.scope_name(pos).split()
+                if "tag.bbcode.nga" not in scopes[-1]:
+                    continue
+
+                # 跳过表格外部区域
+                if not is_end and tag != 'table' and not md_table:
+                    continue
+                
+                # 跳过不支持转换的BBCode
+                if tag not in ['table', 'tr', 'td', 'b', 'i', 'del', 'code', 'url']:
+                    continue
+
+                if not is_end:
+                    # 开头tag
+                    if tag == 'table':
+                        if md_table:
+                            self.view.show_popup('不支持嵌套表格')
+                            break
+                        # 表格初始化
+                        md_table = MarkdownTable(pos)
+                    elif tag == 'tr':
+                        md_table.new_row()
+                    elif tag == 'td':
+                        md_table.new_col()
+                    elif tag == 'url' and suffix:
+                        url = suffix[1:]
+                    tag_stack.append(tag)
+                else:
+                    # 结尾tag
+                    if not tag_stack:
+                        continue
+                    start_tag = tag_stack.pop()
+                    if start_tag == tag:
+                        if tag == 'table':
+                            # 生成markdown格式的表格
+                            replace_str = md_table.build(end_pos=end_pos)
+                            replaces.append((replace_str, md_table.region))
+                            md_table = None
+                        elif tag == 'tr':
+                            md_table.update_row()
+                        elif tag == 'td':
+                            md_table.update_cell(self.view.substr(sublime.Region(last_pos, pos)))
+                            md_table.update_col()
+                        elif tag == 'url':
+                            if url:
+                                caption = self.view.substr(sublime.Region(last_pos, pos))
+                            else:
+                                caption = url = self.view.substr(sublime.Region(last_pos, pos))
+                            md_table.update_cell('[{}]({})'.format(caption, url))
+                            url = None
+                        else:
+                            md_table.update_cell(__BBCODE2MARKDOWN__[tag] + self.view.substr(sublime.Region(last_pos, pos)) + __BBCODE2MARKDOWN__[tag])
+                    else:
+                        self.view.show_popup('检测到未闭合/不当闭合顺序代码块 ' + tag_stack[-1])
+                        break
+
+                # 跳过BBCode tag
+                last_pos = end_pos
+
+            for replace_str, replace_region in reversed(replaces):
+                self.view.replace(edit, replace_region, replace_str)

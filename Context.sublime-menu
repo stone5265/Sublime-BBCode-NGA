@@ -1,4 +1,5 @@
 [
     {"caption": "BBCode转纯文本 (不选中区域则对全文进行操作)", "command": "decode"},
     {"caption": "精简URL (不选中区域则对全文进行操作)", "command": "condense_url"},
+    {"caption": "表格转为Markdown格式", "command": "toggle_markdown_table"},
 ]
