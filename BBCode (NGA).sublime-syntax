@@ -211,7 +211,7 @@ contexts:
 ###[url]######################################################
   url:
     - match: \[url\](.+?)\[/url\]
-      scope: markup.underline.link
+      scope: markup.underline.link.tag.bbcode.nga
     - match: \[url=([^\]]+)\]
       scope: keyword.tag.bbcode.nga
       captures:

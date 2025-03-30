@@ -262,13 +262,14 @@ class ToggleMarkdownTableCommand(sublime_plugin.TextCommand):
                         elif tag == 'url':
                             if url:
                                 caption = self.view.substr(sublime.Region(last_pos, pos))
+                                md_table.update_cell('[{}]({})'.format(caption, url))
                             else:
-                                caption = url = self.view.substr(sublime.Region(last_pos, pos))
-                            md_table.update_cell('[{}]({})'.format(caption, url))
+                                url = self.view.substr(sublime.Region(last_pos, pos))
+                                md_table.update_cell('{}'.format(url))
                             url = None
                         elif tag == 'img':
                             img_url = __NGA_IMAGE_HOSTING__ + self.view.substr(sublime.Region(last_pos, pos))[1:]
-                            md_table.update_cell('[IMG]({})'.format(img_url))
+                            md_table.update_cell('![IMG]({})'.format(img_url))
                         else:
                             md_table.update_cell(__BBCODE2MARKDOWN__[tag] + self.view.substr(sublime.Region(last_pos, pos)) + __BBCODE2MARKDOWN__[tag])
                     else:
