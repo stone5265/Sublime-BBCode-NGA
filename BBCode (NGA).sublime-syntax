@@ -152,7 +152,7 @@ contexts:
   sup:
     - match: \[sup\]
       scope: keyword.tag.bbcode.nga
-      push: r-body
+      push: sup-body
 
   sup-body:
     - meta_scope: meta.sup.bbcode.nga
