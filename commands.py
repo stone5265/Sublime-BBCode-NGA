@@ -4,10 +4,10 @@ import re
 from collections import defaultdict
  
 
-__NGA_DOMAIN__ = "(" + "|".join(["bbs.nga.cn", "ngabbs.com", "nga.178.com"]) + ")"
-__NGA_IMAGE_HOSTING__ = 'https://img.nga.178.com/attachments'
-__BBCODE2MARKDOWN__ = defaultdict(str)
-__BBCODE2MARKDOWN__.update({
+NGA_DOMAIN = "(" + "|".join(["bbs.nga.cn", "ngabbs.com", "nga.178.com"]) + ")"
+NGA_IMAGE_HOSTING = 'https://img.nga.178.com/attachments'
+BBCODE2MARKDOWN = defaultdict(str)
+BBCODE2MARKDOWN.update({
     'b': '**',
     'i': '*',
     'del': '~~',
@@ -86,9 +86,6 @@ class ToggleQuoteCommand(sublime_plugin.TextCommand):
 
 class DecodeCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        if not self.view.match_selector(0, "source.bbcode.nga"):
-            return
-
         pattern = "\["
 
         for select_region in self.view.sel():
@@ -104,14 +101,14 @@ class DecodeCommand(sublime_plugin.TextCommand):
                 if "tag.bbcode.nga" in scopes[-1]:
                     self.view.insert(edit, region.a + 1, "[size=0%][/size]")
 
+    def is_visible(self):
+        return self.view.match_selector(0, "source.bbcode.nga")
+
 
 
 class CondenseUrlCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        if not self.view.match_selector(0, "source.bbcode.nga"):
-            return
-
-        pattern = "(https://)?" + __NGA_DOMAIN__ + "/"
+        pattern = "(https://)?" + NGA_DOMAIN + "/"
 
         for select_region in self.view.sel():
             # 捕获所选区域的所有NGA域名 (若没选中内容, 则默认对全文进行操作)
@@ -125,6 +122,9 @@ class CondenseUrlCommand(sublime_plugin.TextCommand):
                 # 将URL中的NGA域名精简成/
                 if "link" in scopes[-1]:
                     self.view.replace(edit, region, "/")
+
+    def is_visible(self):
+        return self.view.match_selector(0, "source.bbcode.nga")
 
 
 class MarkdownTable:
@@ -189,9 +189,6 @@ class MarkdownTable:
 
 class ToggleMarkdownTableCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        if not self.view.match_selector(0, "source.bbcode.nga"):
-            return
-
         for select_region in self.view.sel():
             start = select_region.begin()
             cur_col = 0
@@ -268,10 +265,10 @@ class ToggleMarkdownTableCommand(sublime_plugin.TextCommand):
                                 md_table.update_cell('{}'.format(url))
                             url = None
                         elif tag == 'img':
-                            img_url = __NGA_IMAGE_HOSTING__ + self.view.substr(sublime.Region(last_pos, pos))[1:]
+                            img_url = NGA_IMAGE_HOSTING + self.view.substr(sublime.Region(last_pos, pos))[1:]
                             md_table.update_cell('![IMG]({})'.format(img_url))
                         else:
-                            md_table.update_cell(__BBCODE2MARKDOWN__[tag] + self.view.substr(sublime.Region(last_pos, pos)) + __BBCODE2MARKDOWN__[tag])
+                            md_table.update_cell(BBCODE2MARKDOWN[tag] + self.view.substr(sublime.Region(last_pos, pos)) + BBCODE2MARKDOWN[tag])
                     else:
                         self.view.show_popup('检测到未闭合/不当闭合顺序代码块 ' + tag_stack[-1])
                         break
@@ -281,3 +278,6 @@ class ToggleMarkdownTableCommand(sublime_plugin.TextCommand):
 
             for replace_str, replace_region in reversed(replaces):
                 self.view.replace(edit, replace_region, replace_str)
+
+    def is_visible(self):
+        return self.view.match_selector(0, "source.bbcode.nga")

@@ -1,4 +1,4 @@
-BBCode (NGA) v1.0.1 Release Notes [2025-03-29]
+BBCode (NGA) v1.0.1 Release Notes [2025-04-01]
 =====================================
 
 

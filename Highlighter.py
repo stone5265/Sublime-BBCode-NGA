@@ -10,7 +10,7 @@ class Region(sublime.Region):
         super(Region, self).__init__(a, b)
 
 
-class Linter(sublime_plugin.EventListener):
+class Highlighter(sublime_plugin.EventListener):
     '''
     警告未闭合/不当闭合顺序代码块的开头tag 与 高亮提示包裹光标所在位置代码块的tag
     '''

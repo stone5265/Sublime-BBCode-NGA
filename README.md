@@ -55,7 +55,7 @@ Packages 目录在不同电脑位于不同位置，可以通过以下操作找�
 
     Preferences -> Browse Packages (Sublime Text 菜单)
 
-![Packages](figs/access_packages.jpg)
+![access_packages](https://raw.githubusercontent.com/stone5265/Sublime-BBCode-NGA/refs/heads/master/figs/access_packages.jpg)
 
 **使用 [Package Control](https://packagecontrol.io/installation#Manual)** : 搜索 `BBCode (NGA)`
 
