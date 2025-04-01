@@ -7,21 +7,17 @@ BBCode (NGA) - Sublime Text Package
 
 ## 特性
 
+| 语法高亮                 | 代码片段                   | 快捷键 & 右键菜单          |
+| :---------------------: | :-----------------------: | :-----------------------: |
+| ![syntax1][syntax1_gif] | ![snippets][snippets_gif] | ![commands][commands_gif] |
+| ![syntax2][syntax2_gif] |                           |                           |
+
 - **语法高亮**
   - BBCode 代码块高亮提示
 
   - 包裹光标的代码块高亮提示
 
   - 未闭合的代码块警告提示
-
-  | 支持的语法   |         |               |       |                |
-  | :---------- | :------ | :------------ | :---- | :------------- |
-  | b           | i       | u             | del   | sup            |
-  | l           | r       | h             | align | quote          |
-  | code        | font    | color         | size  | url            |
-  | img         | tid     | pid           | uid   | \_\_高亮占位符\_\_ |
-  | collapse    | list    | table         | tr    | td             |
-  | randomblock | fixsize | style(待完善) |       |                |
   
 - **代码片段**
   - BBCode 代码块 ( 对应 tag 并双写其首字母，比如 **bb** 对应 `[b][/b]` )
@@ -59,3 +55,8 @@ Packages 目录在不同电脑位于不同位置，可以通过以下操作找�
 
 **使用 [Package Control](https://packagecontrol.io/installation#Manual)** : 搜索 `BBCode (NGA)`
 
+
+[commands_gif]: https://raw.githubusercontent.com/stone5265/Sublime-BBCode-NGA/refs/heads/master/figs/commands.gif
+[snippets_gif]: https://raw.githubusercontent.com/stone5265/Sublime-BBCode-NGA/refs/heads/master/figs/snippets.gif
+[syntax2_gif]: https://raw.githubusercontent.com/stone5265/Sublime-BBCode-NGA/refs/heads/master/figs/syntax_error.gif
+[syntax1_gif]: https://raw.githubusercontent.com/stone5265/Sublime-BBCode-NGA/refs/heads/master/figs/syntax_surroundings.gif
