@@ -10,11 +10,12 @@ class Region(sublime.Region):
         super(Region, self).__init__(a, b)
 
 
-class Highlighter(sublime_plugin.EventListener):
+class Highlighter(sublime_plugin.ViewEventListener):
     '''
     警告未闭合/不当闭合顺序代码块的开头tag 与 高亮提示包裹光标所在位置代码块的tag
     '''
-    def __init__(self):
+    def __init__(self, view):
+        super().__init__(view)
         # 防抖计时器
         self.debounce_timer = None
         # 上一次(多行)光标的位置
@@ -24,32 +25,34 @@ class Highlighter(sublime_plugin.EventListener):
         # list中所属[*]的区域
         self.list_items = defaultdict(list)
 
-    def on_activated_async(self, view):
-        self._check_unclosed_tags(view)
+    @classmethod
+    def is_applicable(cls, settings):
+        syntax = settings.get('syntax')
+        return syntax.endswith('BBCode (NGA).sublime-syntax')
 
-    def on_post_save_async(self, view):
-        self._check_unclosed_tags(view)
+    def on_activated_async(self):
+        self._check_unclosed_tags()
 
-    def on_modified_async(self, view):
-        self._check_unclosed_tags(view)
+    def on_post_save_async(self):
+        self._check_unclosed_tags()
 
-    def on_selection_modified_async(self, view):
+    def on_modified_async(self):
+        self._check_unclosed_tags()
+
+    def on_selection_modified_async(self):
         # 200ms内只触发一次
         if self.debounce_timer:
             self.debounce_timer.cancel()
-        self.debounce_timer = Timer(0.2, self._process_cursor_move, [view])
+        self.debounce_timer = Timer(0.2, self._process_cursor_move, [])
         self.debounce_timer.start()
 
     # 检查未闭合tag
-    def _check_unclosed_tags(self, view):
-        if not view.match_selector(0, "source.bbcode.nga"):
-            return
-
+    def _check_unclosed_tags(self):
         self.region_end2start.clear()
         self.list_items.clear()
         error_regions = []
         
-        content = view.substr(sublime.Region(0, view.size()))
+        content = self.view.substr(sublime.Region(0, self.view.size()))
         tag_stack = []
         list_stack = []     # 用于list多层嵌套时, 获取当前最内层的list
 
@@ -70,7 +73,7 @@ class Highlighter(sublime_plugin.EventListener):
                     self.list_items[list_stack[-1]].append(region)
                 continue
             
-            scopes = view.scope_name(pos).split()
+            scopes = self.view.scope_name(pos).split()
 
             # 若非支持的BBCode tag, 则跳过
             if "tag.bbcode.nga" not in scopes[-1]:
@@ -105,15 +108,12 @@ class Highlighter(sublime_plugin.EventListener):
             error_regions.append(region)
 
         # 覆盖更新错误区域
-        # view.add_regions("error", error_regions,  "invalid.illegal", flags=sublime.RegionFlags.DRAW_SQUIGGLY_UNDERLINE)
-        view.add_regions("error", error_regions,  "invalid.illegal", flags=2048)
+        # self.view.add_regions("error", error_regions,  "invalid.illegal", flags=sublime.RegionFlags.DRAW_SQUIGGLY_UNDERLINE)
+        self.view.add_regions("error", error_regions,  "invalid.illegal", flags=2048)
 
     # 光标移动时更新高亮提示
-    def _process_cursor_move(self, view):
-        if not view.match_selector(0, "source.bbcode.nga"):
-            return
-
-        cursors_pos = [region.b for region in view.sel()]
+    def _process_cursor_move(self):
+        cursors_pos = [region.b for region in self.view.sel()]
         
         # 位置未变化时跳过
         if cursors_pos == self.last_cursors_pos:
@@ -124,7 +124,7 @@ class Highlighter(sublime_plugin.EventListener):
 
         for cursor_pos in cursors_pos:
             # 若光标没有被任何代码块包裹, 则跳过
-            if len(view.scope_name(cursor_pos).split()) <= 1:
+            if len(self.view.scope_name(cursor_pos).split()) <= 1:
                 continue
 
             for end_region in self.region_end2start.keys():
@@ -140,12 +140,12 @@ class Highlighter(sublime_plugin.EventListener):
                     highlight_regions += [start_region, end_region]
 
                     # 在list中, 从最后一个所属的[*]开始, 找第一个位于光标前面的[*]
-                    if view.substr(end_region) == "[/list]":
+                    if self.view.substr(end_region) == "[/list]":
                         for item_region in reversed(self.list_items[start_region.to_tuple()]):
                             if item_region.begin() <= cursor_pos:
                                 highlight_regions.append(item_region)
                                 break
         
         # 覆盖更新高亮区域
-        # view.add_regions("highlight", highlight_regions, "entity.name", flags=sublime.RegionFlags.DRAW_NO_FILL)
-        view.add_regions("highlight", highlight_regions, "entity.name", flags=32)
+        # self.view.add_regions("highlight", highlight_regions, "entity.name", flags=sublime.RegionFlags.DRAW_NO_FILL)
+        self.view.add_regions("highlight", highlight_regions, "entity.name", flags=32)

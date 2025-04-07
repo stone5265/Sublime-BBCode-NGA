@@ -1,0 +1,15 @@
+BBCode (NGA) v1.0.3 Release Notes [2025-04-07]
+=====================================
+
+
+CHANGES/FIXES
+----------------
+- 修复 messages.json 格式
+- 监听器类型由 EventListener 改为 ViewEventListener, 并通过 is_applicable() 来限制作用域
+
+
+
+
+BUGS
+----------------
+- [X]style：高亮显示未完成，没能正确将style后面的参数正确变色（优先级无限低，暂时不管这个）
