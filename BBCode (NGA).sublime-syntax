@@ -204,7 +204,7 @@ contexts:
 ###[img]######################################################
   img:
     - match: \[img\](.+?)\[/img\]
-      scope: keyword.operator.tag.bbcode.nga
+      scope: keyword.operator.img.tag.bbcode.nga
       captures:
         1: keyword.operator
 

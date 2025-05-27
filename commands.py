@@ -1,92 +1,54 @@
 import sublime
 import sublime_plugin
 import re
-from collections import defaultdict
- 
-
-NGA_DOMAIN = "(" + "|".join(["bbs.nga.cn", "ngabbs.com", "nga.178.com"]) + ")"
-NGA_IMAGE_HOSTING = 'https://img.nga.178.com/attachments'
-BBCODE2MARKDOWN = defaultdict(str)
-BBCODE2MARKDOWN.update({
-    'b': '**',
-    'i': '*',
-    'del': '~~',
-    'code': '`'
-})
+from .utils import *
 
 
-def toggle(view, edit, tag):
-    if not view.match_selector(0, "source.bbcode.nga"):
-        return
-
-    start_tag = "[" + tag + "]"
-    end_tag = "[/" + tag + "]"
-
-    new_selections = []
-    
-    for region in view.sel():
-        bias = 0
-        start_check, end_check = region.begin() - len(start_tag), region.end() + len(end_tag)
-
-        # 检查所选区域前后是否存在tag
-        exist_start = view.substr(sublime.Region(start_check, region.begin())) == start_tag
-        exist_end = view.substr(sublime.Region(region.end(), end_check)) == end_tag
-
-        if exist_start and exist_end:
-            # 删除代码块
-            view.erase(edit, sublime.Region(region.end(), end_check))
-            view.erase(edit, sublime.Region(start_check, region.begin()))
-            bias = -len(start_tag)
-        else:
-            # 添加代码块
-            view.insert(edit, region.end(), end_tag)
-            view.insert(edit, region.begin(), start_tag)
-            bias = len(start_tag)
-
-        new_selections.append(sublime.Region(region.a + bias, region.b + bias))
-
-    # 重新选择区域
-    view.sel().clear()
-    for selection in new_selections:
-        view.sel().add(selection)
-
-
-def find_all(view, pattern, within=None):
-    if within is not None:
-        if sublime.version() >= "4181":
-            regions = view.find_all(pattern, within=within)
-        else:
-            regions = view.find_all(pattern)
-            regions = [region for region in regions if region.a >= select_region.begin() and region.b <= select_region.end()]
-    else:
-        regions = view.find_all(pattern)
-
-    return regions
+NGA_DOMAIN = '(' + '|'.join(['bbs.nga.cn', 'ngabbs.com', 'nga.178.com']) + ')'
 
 
 class ToggleBoldCommand(sublime_plugin.TextCommand):
+    '''
+    在选中区域两侧 添加/去除 [b][/b]
+    '''
     def run(self, edit):
-        toggle(self.view, edit, "b")
+        toggle(self.view, edit, 'b')
 
 
 class ToggleUnderlineCommand(sublime_plugin.TextCommand):
+    '''
+    在选中区域两侧 添加/去除 [u][/u]
+    '''
     def run(self, edit):
-        toggle(self.view, edit, "u")
+        toggle(self.view, edit, 'u')
 
 
 class ToggleItalicCommand(sublime_plugin.TextCommand):
+    '''
+    在选中区域两侧 添加/去除 [i][/i]
+    '''
     def run(self, edit):
-        toggle(self.view, edit, "i")
+        toggle(self.view, edit, 'i')
 
 
 class ToggleQuoteCommand(sublime_plugin.TextCommand):
+    '''
+    在选中区域两侧 添加/去除 [quote][/quote]
+    '''
     def run(self, edit):
-        toggle(self.view, edit, "quote")
+        toggle(self.view, edit, 'quote')
 
 
 class DecodeCommand(sublime_plugin.TextCommand):
+    '''BBCode转纯文本: 使选中区域内 BBCode 失去效果, 显示为纯文本
+
+    示例
+    ----
+    (转换前) [b]加粗[/b] [i]斜体[/i]
+    (转换后) [[size=0%][/size]b]加粗[[size=0%][/size]/b] [[size=0%][/size]i]斜体[[size=0%][/size]/i]
+    '''
     def run(self, edit):
-        pattern = "\["
+        pattern = '\['
 
         for select_region in self.view.sel():
             # 捕获所选区域的所有'[' (若没选中内容, 则默认对全文进行操作)
@@ -97,21 +59,34 @@ class DecodeCommand(sublime_plugin.TextCommand):
 
             for region in reversed(regions):
                 scopes = self.view.scope_name(region.a).split()
-                # 将[tag]...[/tag]变为[[size=0%][/size]tag]...[[size=0%][/size]/tag]
-                if "tag.bbcode.nga" in scopes[-1]:
-                    self.view.insert(edit, region.a + 1, "[size=0%][/size]")
+                # 将"[tag]...[/tag]"变为"[[size=0%][/size]tag]...[[size=0%][/size]/tag]"
+                if 'tag.bbcode.nga' in scopes[-1]:
+                    self.view.insert(edit, region.a + 1, '[size=0%][/size]')
 
     def is_visible(self):
-        return self.view.match_selector(0, "source.bbcode.nga")
-
+        return self.view.match_selector(0, 'source.bbcode.nga')
 
 
 class CondenseUrlCommand(sublime_plugin.TextCommand):
+    '''url精简: 精简选中区域中的url代码块中的NGA域名和B站链接
+
+    示例-NGA域名
+    ----
+    (1:转换前) [url]https://bbs.nga.cn/read.php?tid=43417488[/url]
+    (1:转换后) [url]/read.php?tid=43417488[/url]
+    (2:转换前) [url=https://ngabbs.com/thread.php?fid=-447601]猴区[/url]
+    (2:转换后) [url=/thread.php?fid=-447601]猴区[/url]
+
+    示例-B站链接
+    ----
+    (转换前) [url=https://www.bilibili.com/bangumi/play/ep1642068?season_id=90684&season_type=1&aid=114424941643282&season_cover=https%3A%2F%2Fi0.hdslb.com%2Fbfs%2Fbangumi%2Fimage%2F2f5946880c07914d1cccd112702884f232b647e0.png&title=7&long_title=%E9%9E%A0%E8%BA%AC%E8%A6%81%E6%B7%B1%20%E5%BF%97%E5%90%91%E8%A6%81%E9%AB%98&player_width=1920&player_height=1080&player_rotate=0&ep_status=13&is_preview=0&spm_id_from=333.1365.list.card_pgc.click]末日后酒店EP7[/url]
+    (转换后) [url=https://www.bilibili.com/bangumi/play/ep1642068]末日后酒店EP7[/url]
+    '''
     def run(self, edit):
-        pattern = "(https://)?" + NGA_DOMAIN + "/"
+        pattern = '(https://)?(' + NGA_DOMAIN + '/)|(www.bilibili.com/[^\[\]\s]+)'
 
         for select_region in self.view.sel():
-            # 捕获所选区域的所有NGA域名 (若没选中内容, 则默认对全文进行操作)
+            # 捕获所选区域的所有NGA域名/B站链接 (若没选中内容, 则默认对全文进行操作)
             if len(self.view.sel()) == 1 and select_region.empty():
                 regions = find_all(self.view, pattern)
             else:
@@ -119,108 +94,113 @@ class CondenseUrlCommand(sublime_plugin.TextCommand):
 
             for region in reversed(regions):
                 scopes = self.view.scope_name(region.a).split()
-                # 将URL中的NGA域名精简成/
-                if "link" in scopes[-1]:
-                    self.view.replace(edit, region, "/")
+                # 将URL中的NGA域名精简成"/", B站链接去掉"?"之后的内容
+                if 'link' in scopes[-1]:
+                    url = self.view.substr(region)
+                    if 'bilibili' in url:
+                        self.view.replace(edit, region, url.split('?')[0])
+                    else:
+                        self.view.replace(edit, region, '/')
 
     def is_visible(self):
-        return self.view.match_selector(0, "source.bbcode.nga")
+        return self.view.match_selector(0, 'source.bbcode.nga')
 
 
-class MarkdownTable:
-    def __init__(self, start_pos):
-        self.start_pos = start_pos
-        self.end_pos = -1
-        self.rows = []
-        self.len_cols = defaultdict(int)
-        self.row = []
-        self.cell = ''
-        self.cur_col = 0
+class ReplaceImgCommand(sublime_plugin.TextCommand):
+    '''img转占位符: 将选中区域中的img代码块替换为"__图__"
 
-    @property
-    def n_cols(self):
-        return max(self.len_cols.keys())
+    示例
+    ----
+    (转换前) [quote][img]./mon_202505/22/-9lddQ1aa-axbtK2aT1kSac-ac.png[/img][/quote]
+    (转换后) [quote]__图__[/quote]
+    '''
+    def run(self, edit):
+        pattern = '\[img\](.+?)\[/img\]'
 
-    @property
-    def region(self):
-        return sublime.Region(self.start_pos, self.end_pos) if self.end_pos != -1 else None
+        for select_region in self.view.sel():
+            # 捕获所选区域的img块 (若没选中内容, 则默认对全文进行操作)
+            if len(self.view.sel()) == 1 and select_region.empty():
+                regions = find_all(self.view, pattern)
+            else:
+                regions = find_all(self.view, pattern, within=select_region)
 
-    def new_row(self):
-        self.row = []
-        self.cur_col = 0
+            for region in reversed(regions):
+                scopes = self.view.scope_name(region.a).split()
+                # 将"[img]...[/img]"变为"__图__"
+                if 'img.tag.bbcode.nga' in scopes[-1]:
+                    self.view.replace(edit, region, '__图__')
 
-    def new_col(self):
-        self.new_cell()
-        self.cur_col += 1
-
-    def new_cell(self):
-        self.cell = ''
-
-    def update_row(self):
-        self.rows.append(self.row)
-
-    def update_col(self):
-        self.cell = self.cell.replace('\n', '<br>')
-        self.row.append(self.cell)
-        self.len_cols[self.cur_col] = max(self.len_cols[self.cur_col], len(self.cell.encode('gbk')))
-
-    def update_cell(self, s):
-        self.cell += s
-
-    def build(self, end_pos):
-        self.end_pos = end_pos
-        filled_rows = []
-
-        for row in self.rows:
-            # 填充缺少的列
-            row += [''] * (self.n_cols - len(row))
-            # 填充单元格, 使得每个单元格长度一样 (中文占占两字节, 需要手动处理)
-            row = ['{:<{:}}'.format(cell, self.len_cols[i + 1] - len(cell.encode('gbk')) + len(cell)) for i, cell in enumerate(row)]
-            # 转为字符串
-            filled_rows.append('| ' + ' | '.join(row) + ' |')
-
-        split_row = '| ' + ' | '.join([':' + '-' * (self.len_cols[i + 1] - 1) for i in range(self.n_cols)]) + ' |'
-        filled_rows.insert(1, split_row)
-
-        # 转为字符串
-        table = '\n' + '\n'.join(filled_rows) + '\n'
-        return table
+    def is_visible(self):
+        return self.view.match_selector(0, 'source.bbcode.nga')
 
 
-class ToggleMarkdownTableCommand(sublime_plugin.TextCommand):
+class TableToMarkdownCommand(sublime_plugin.TextCommand):
+    '''table转Markdown格式: 将选中区域中的table代码块转换为Markdown格式, 仅支持基础表格 (加粗/斜体/删除线/代码/url/补全NGA图床图片的完整URL)
+    
+    示例
+    ----
+    (转换前)
+    
+    [table]
+    [tr][td15][b]功能[/b][/td][td35][b]展示[/b][/td][td15][b]功能[/b][/td][td35][b]展示[/b][/td][/tr]
+    [tr]
+    [td]加粗[/td][td][b]加粗[/b][/td]
+    [td]斜体[/td][td][i]斜体[/i][/td]
+    [/tr]
+    [tr]
+    [td]删除线[/td][td][del]删除线[/del][/td]
+    [td]换行[/td][td]第一段
+    第二段[/td]
+    [/tr]
+    [tr]
+    [td]代码[/td][td][code]代码[/code][/td]
+    [td]图片[/td][td][quote][img]./mon_202505/22/-9lddQ1aa-axbtK2aT1kSac-ac.png[/img][/quote][/td]
+    [/tr]
+    [tr]
+    [td]链接1[/td][td][url]/thread.php?fid=-447601[/url][/td]
+    [td]链接2[/td][td][url=/thread.php?fid=-447601]猴区[/url][/td]
+    [/tr]
+    [/table]
+    
+    (转换后)
+    
+    | **功能** | **展示**                                  | **功能** | **展示**                                                                                 |
+    | :------- | :---------------------------------------- | :------- | :--------------------------------------------------------------------------------------- |
+    | 加粗     | **加粗**                                  | 斜体     | *斜体*                                                                                   |
+    | 删除线   | ~~删除线~~                                | 换行     | 第一段<br>第二段                                                                         |
+    | 代码     | `代码`                                    | 图片     | ![IMG](https://img.nga.178.com/attachments/mon_202505/22/-9lddQ1aa-axbtK2aT1kSac-ac.png) |
+    | 链接1    | https://bbs.nga.cn/thread.php?fid=-447601 | 链接2    | [猴区](https://bbs.nga.cn/thread.php?fid=-447601)                                        |
+    
+    '''
     def run(self, edit):
         for select_region in self.view.sel():
             start = select_region.begin()
-            cur_col = 0
-            row = []
-            cell = ''
             url = None
-            len_cols = defaultdict(int)
             md_table = None
             replaces = []
             
             content = self.view.substr(select_region)
             tag_stack = []
-            pattern = re.compile("\[(/)?([^=\[\] \d]+|\*)(\d+| [^\[\]]+|=[^\]]+)?\]")
+            pattern = re.compile('\[(/)?([^=\[\] \d]+|\*)(\d+| [^\[\]]+|=[^\]]+)?\]')
             for match in pattern.finditer(content):
                 is_end, tag, suffix = match.groups()
 
                 pos = start + match.start()
                 end_pos = pos + len(match.group())
-                region = sublime.Region(pos, end_pos)
                 
                 scopes = self.view.scope_name(pos).split()
-                if "tag.bbcode.nga" not in scopes[-1]:
+                if 'tag.bbcode.nga' not in scopes[-1]:
                     continue
 
                 # 跳过表格外部区域
-                if not is_end and tag != 'table' and not md_table:
+                if not md_table and tag != 'table' and not is_end:
                     continue
                 
                 # 跳过不支持转换的BBCode
                 if tag not in ['table', 'tr', 'td', 'b', 'i', 'del', 'code', 'url', 'img']:
                     if md_table:
-                        md_table.update_cell(self.view.substr(sublime.Region(last_pos, pos)))
+                        text = self.view.substr(sublime.Region(last_pos, pos))
+                        md_table.update_cell(text)
                     last_pos = end_pos
                     continue
 
@@ -228,7 +208,7 @@ class ToggleMarkdownTableCommand(sublime_plugin.TextCommand):
                     # 开头tag
                     if tag == 'table':
                         if md_table:
-                            self.view.show_popup('不支持嵌套表格')
+                            self.view.show_popup('不支持嵌套表格', location=pos)
                             break
                         # 表格初始化
                         md_table = MarkdownTable(pos)
@@ -237,47 +217,28 @@ class ToggleMarkdownTableCommand(sublime_plugin.TextCommand):
                     elif tag == 'td':
                         md_table.new_col()
                     elif tag == 'url' and suffix:
-                        url = suffix[1:]
+                        md_table.buffer['url'] = suffix[1:]
                     tag_stack.append(tag)
                 else:
                     # 结尾tag
-                    if not tag_stack:
-                        continue
-                    start_tag = tag_stack.pop()
-                    if start_tag == tag:
+                    if tag_stack and tag_stack.pop() == tag:
+                        text = self.view.substr(sublime.Region(last_pos, pos))
                         if tag == 'table':
                             # 生成markdown格式的表格
                             replace_str = md_table.build(end_pos=end_pos)
-                            replaces.append((replace_str, md_table.region))
+                            replaces.append((md_table.region, replace_str))
                             md_table = None
-                        elif tag == 'tr':
-                            md_table.update_row()
-                        elif tag == 'td':
-                            print(self.view.substr(sublime.Region(last_pos, pos)))
-                            md_table.update_cell(self.view.substr(sublime.Region(last_pos, pos)))
-                            md_table.update_col()
-                        elif tag == 'url':
-                            if url:
-                                caption = self.view.substr(sublime.Region(last_pos, pos))
-                                md_table.update_cell('[{}]({})'.format(caption, url))
-                            else:
-                                url = self.view.substr(sublime.Region(last_pos, pos))
-                                md_table.update_cell('{}'.format(url))
-                            url = None
-                        elif tag == 'img':
-                            img_url = NGA_IMAGE_HOSTING + self.view.substr(sublime.Region(last_pos, pos))[1:]
-                            md_table.update_cell('![IMG]({})'.format(img_url))
                         else:
-                            md_table.update_cell(BBCODE2MARKDOWN[tag] + self.view.substr(sublime.Region(last_pos, pos)) + BBCODE2MARKDOWN[tag])
+                            md_table.update_cell(text, tag)
                     else:
-                        self.view.show_popup('检测到未闭合/不当闭合顺序代码块 ' + tag_stack[-1])
+                        self.view.show_popup('检测到未闭合/不当闭合顺序代码块 ' + tag_stack[-1], location=pos)
                         break
 
                 # 跳过BBCode tag
                 last_pos = end_pos
 
-            for replace_str, replace_region in reversed(replaces):
+            for replace_region, replace_str in reversed(replaces):
                 self.view.replace(edit, replace_region, replace_str)
 
     def is_visible(self):
-        return self.view.match_selector(0, "source.bbcode.nga")
+        return self.view.match_selector(0, 'source.bbcode.nga')
